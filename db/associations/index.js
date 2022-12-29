@@ -1,10 +1,11 @@
 exports.applyAssociations = (sequelize) => {
   const { user, org } = sequelize.models;
 
-  org.hasMany(user, { foreignKey: "adminId" });
   user.belongsTo(org, {
     constraints: true,
+    targetKey: "id",
     foreignKey: "orgId",
     onDelete: "CASCADE",
+    allowNull: false,
   });
 };

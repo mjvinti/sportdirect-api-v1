@@ -20,16 +20,9 @@ module.exports = (sequelize) =>
       type: DataTypes.STRING,
       allowNull: false,
     },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     role: {
       type: DataTypes.ENUM(["user", "admin"]),
       allowNull: false,
-    },
-    orgId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+      defaultValue: "user",
     },
   });
