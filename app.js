@@ -1,5 +1,6 @@
 const bodyParser = require("body-parser");
 const express = require("express");
+const helmet = require("helmet");
 
 const authRoutes = require("./routes/auth");
 const orgsRoutes = require("./routes/orgs");
@@ -8,6 +9,7 @@ const sequelize = require("./db");
 
 const app = express();
 
+app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
