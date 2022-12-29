@@ -3,7 +3,14 @@ const {
 } = require("../../db");
 
 exports.postCreateUser = async (req, res, next) => {
-  const { firstName, lastName, email, role = "user", orgId } = req.body;
+  const {
+    firstName,
+    lastName,
+    email,
+    role = "user",
+    status = "pending",
+    orgId,
+  } = req.body;
 
   try {
     const createdUser = await user.create({
@@ -11,6 +18,7 @@ exports.postCreateUser = async (req, res, next) => {
       lastName,
       email,
       role,
+      status,
       orgId,
     });
     return res.json(createdUser);
@@ -33,7 +41,7 @@ exports.getUserById = (req, res, next) => {
 
 exports.putUpdateUserById = async (req, res, next) => {
   const {
-    body: { firstName, lastName, email, role, orgId },
+    body: { firstName, lastName, email, role, status, orgId },
     user,
   } = req;
 
@@ -43,6 +51,7 @@ exports.putUpdateUserById = async (req, res, next) => {
       lastName,
       email,
       role,
+      status,
       orgId,
     });
     return res.json(updatedUser);

@@ -17,6 +17,11 @@ module.exports = (sequelize) =>
       type: DataTypes.ENUM("basebell", "basketball", "hockey", "soccer"),
       allowNull: false,
     },
+    status: {
+      type: DataTypes.ENUM("active", "inactive"),
+      allowNull: false,
+      defaultValue: "active",
+    },
     adminId: {
       type: DataTypes.INTEGER,
       allowNull: true,
