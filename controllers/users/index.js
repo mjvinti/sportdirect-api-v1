@@ -10,6 +10,7 @@ exports.postCreateUser = async (req, res, next) => {
     role = "user",
     status = "pending",
     orgId,
+    teamId = null,
   } = req.body;
 
   try {
@@ -20,6 +21,7 @@ exports.postCreateUser = async (req, res, next) => {
       role,
       status,
       orgId,
+      teamId,
     });
     return res.json(createdUser);
   } catch (err) {
@@ -41,7 +43,7 @@ exports.getUserById = (req, res, next) => {
 
 exports.putUpdateUserById = async (req, res, next) => {
   const {
-    body: { firstName, lastName, email, role, status, orgId },
+    body: { firstName, lastName, email, role, status, orgId, teamId = null },
     user,
   } = req;
 
@@ -53,6 +55,7 @@ exports.putUpdateUserById = async (req, res, next) => {
       role,
       status,
       orgId,
+      teamId,
     });
     return res.json(updatedUser);
   } catch (err) {
