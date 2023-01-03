@@ -22,8 +22,4 @@ module.exports = (sequelize) =>
       allowNull: false,
       defaultValue: "active",
     },
-    adminId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
   });

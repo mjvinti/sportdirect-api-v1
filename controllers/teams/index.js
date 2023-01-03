@@ -6,7 +6,9 @@ exports.postCreateTeam = async (req, res, next) => {
   const { orgId = null, teamName, status = "active" } = req.body;
 
   if (!orgId) {
-    return res.json("You provide the following required parameters: orgId");
+    return res
+      .status(400)
+      .json("You provide the following required parameters: orgId");
   }
 
   try {

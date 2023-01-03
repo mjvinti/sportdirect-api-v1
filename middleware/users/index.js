@@ -6,13 +6,15 @@ exports.loadUser = async (req, res, next) => {
   const { userId = null } = req.params;
 
   if (!userId) {
-    return res.json("You provide the following required parameters: userId");
+    return res
+      .status(400)
+      .json("You provide the following required parameters: userId");
   }
 
   try {
     const foundUser = await user.findByPk(userId);
     if (!foundUser) {
-      return res.json(`There is no user for id: ${userId}`);
+      return res.status(404).json(`There is no user for id: ${userId}`);
     }
     req.user = foundUser;
     next();
