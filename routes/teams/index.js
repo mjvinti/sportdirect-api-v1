@@ -11,4 +11,6 @@ router.put("/:teamId", loadTeam, teamsController.putUpdateTeamById);
 
 router.delete("/:teamId", loadTeam, teamsController.deleteTeamById);
 
+router.post("/:teamId/user", loadTeam, teamsController.postCreateTeamUser);
+
 module.exports = router;
