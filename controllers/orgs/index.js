@@ -51,3 +51,18 @@ exports.deleteOrgById = async (req, res, next) => {
     return res.json("Something went wrong");
   }
 };
+
+exports.postCreateOrgTeam = async (req, res, next) => {
+  const {
+    body: { teamName, status = "active" },
+    org,
+  } = req;
+
+  try {
+    const createdTeam = await org.createTeam({ teamName, status });
+    return res.json(createdTeam);
+  } catch (err) {
+    console.log(err);
+    return res.json("Something went wrong");
+  }
+};

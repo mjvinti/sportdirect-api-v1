@@ -11,4 +11,6 @@ router.put("/:orgId", loadOrg, orgsController.putUpdateOrgById);
 
 router.delete("/:orgId", loadOrg, orgsController.deleteOrgById);
 
+router.post("/:orgId/team", loadOrg, orgsController.postCreateOrgTeam);
+
 module.exports = router;
