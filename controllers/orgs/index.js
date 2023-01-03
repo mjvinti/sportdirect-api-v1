@@ -66,3 +66,32 @@ exports.postCreateOrgTeam = async (req, res, next) => {
     return res.json("Something went wrong");
   }
 };
+
+exports.postCreateOrgUser = async (req, res, next) => {
+  const {
+    body: {
+      firstName,
+      lastName,
+      email,
+      role = "user",
+      status = "pending",
+      teamId = null,
+    },
+    org,
+  } = req;
+
+  try {
+    const createdUser = await org.createUser({
+      firstName,
+      lastName,
+      email,
+      role,
+      status,
+      teamId,
+    });
+    return res.json(createdUser);
+  } catch (err) {
+    console.log(err);
+    return res.json("Something went wrong");
+  }
+};
