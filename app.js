@@ -7,7 +7,7 @@ const orgsRoutes = require("./routes/orgs");
 const usersRoutes = require("./routes/users");
 const teamsRoutes = require("./routes/teams");
 
-const sequelize = require("./db");
+const sequelize = require("./lib/db/setup");
 
 const app = express();
 

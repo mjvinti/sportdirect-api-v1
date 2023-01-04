@@ -1,9 +1,10 @@
-const {
-  models: { team },
-} = require("../../db");
+const db = require("../../lib/db");
 
 exports.postCreateTeam = async (req, res, next) => {
-  const { orgId = null, teamName, status = "active" } = req.body;
+  const {
+    body: { orgId = null, teamName, status = "active" },
+  } = req;
+  const TeamModel = db.loadModel("team");
 
   if (!orgId) {
     return res
@@ -12,7 +13,7 @@ exports.postCreateTeam = async (req, res, next) => {
   }
 
   try {
-    const createdTeam = await team.create({ orgId, teamName, status });
+    const createdTeam = await TeamModel.create({ orgId, teamName, status });
     return res.json(createdTeam);
   } catch (err) {
     console.log(err);

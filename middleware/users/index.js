@@ -1,9 +1,8 @@
-const {
-  models: { user },
-} = require("../../db");
+const db = require("../../lib/db");
 
 exports.loadUser = async (req, res, next) => {
   const { userId = null } = req.params;
+  const UserModel = db.loadModel("user");
 
   if (!userId) {
     return res
@@ -12,7 +11,7 @@ exports.loadUser = async (req, res, next) => {
   }
 
   try {
-    const foundUser = await user.findByPk(userId);
+    const foundUser = await UserModel.findByPk(userId);
     if (!foundUser) {
       return res.status(404).json(`There is no user for id: ${userId}`);
     }

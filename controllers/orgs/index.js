@@ -1,12 +1,13 @@
-const {
-  models: { org },
-} = require("../../db");
+const db = require("../../lib/db");
 
 exports.postCreateOrg = async (req, res, next) => {
-  const { adminId = null, orgName, sport, status = "active" } = req.body;
+  const {
+    body: { orgName, sport, status = "active" },
+  } = req;
+  const OrgModel = db.loadModel("org");
 
   try {
-    const createdOrg = await org.create({ adminId, orgName, sport, status });
+    const createdOrg = await OrgModel.create({ orgName, sport, status });
     return res.json(createdOrg);
   } catch (err) {
     console.log(err);
@@ -27,12 +28,12 @@ exports.getOrgById = (req, res, next) => {
 
 exports.putUpdateOrgById = async (req, res, next) => {
   const {
-    body: { adminId = null, orgName, sport, status },
+    body: { orgName, sport, status },
     org,
   } = req;
 
   try {
-    const updatedOrg = await org.update({ adminId, orgName, sport, status });
+    const updatedOrg = await org.update({ orgName, sport, status });
     return res.json(updatedOrg);
   } catch (err) {
     console.log(err);

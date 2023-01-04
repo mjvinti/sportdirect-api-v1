@@ -1,9 +1,8 @@
-const {
-  models: { team },
-} = require("../../db");
+const db = require("../../lib/db");
 
 exports.loadTeam = async (req, res, next) => {
   const { teamId = null } = req.params;
+  const TeamModel = db.loadModel("team");
 
   if (!teamId) {
     return res
@@ -12,7 +11,7 @@ exports.loadTeam = async (req, res, next) => {
   }
 
   try {
-    const foundTeam = await team.findByPk(teamId);
+    const foundTeam = await TeamModel.findByPk(teamId);
     if (!foundTeam) {
       return res.status(404).json(`There is no user for id: ${teamId}`);
     }

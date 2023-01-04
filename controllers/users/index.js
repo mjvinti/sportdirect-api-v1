@@ -1,20 +1,21 @@
-const {
-  models: { user },
-} = require("../../db");
+const db = require("../../lib/db");
 
 exports.postCreateUser = async (req, res, next) => {
   const {
-    firstName,
-    lastName,
-    email,
-    role = "user",
-    status = "pending",
-    orgId,
-    teamId = null,
-  } = req.body;
+    body: {
+      firstName,
+      lastName,
+      email,
+      role = "user",
+      status = "pending",
+      orgId,
+      teamId = null,
+    },
+  } = req;
+  const UserModel = db.loadModel("user");
 
   try {
-    const createdUser = await user.create({
+    const createdUser = await UserModel.create({
       firstName,
       lastName,
       email,
