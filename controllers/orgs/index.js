@@ -10,8 +10,9 @@ exports.postCreateOrg = async (req, res, next) => {
     const createdOrg = await OrgModel.create({ orgName, sport, status });
     return res.json(createdOrg);
   } catch (err) {
-    console.log(err);
-    return res.json("Something went wrong");
+    return res
+      .status(500)
+      .json("Something went wrong creating the org. Please try again later.");
   }
 };
 
