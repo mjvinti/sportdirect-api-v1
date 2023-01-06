@@ -1,7 +1,9 @@
 const db = require("../../lib/db");
 
 exports.loadTeam = async (req, res, next) => {
-  const { teamId = null } = req.params;
+  const {
+    params: { teamId = null },
+  } = req;
   const TeamModel = db.loadModel("team");
 
   if (!teamId) {

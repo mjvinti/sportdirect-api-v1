@@ -1,13 +1,15 @@
 const db = require("../../lib/db");
 
 exports.loadUser = async (req, res, next) => {
-  const { userId = null } = req.params;
+  const {
+    params: { userId = null },
+  } = req;
   const UserModel = db.loadModel("user");
 
   if (!userId) {
     return res
       .status(400)
-      .json("You provide the following required parameters: userId");
+      .json("You must provide the following required parameters: userId");
   }
 
   try {
@@ -18,7 +20,8 @@ exports.loadUser = async (req, res, next) => {
     req.user = foundUser;
     next();
   } catch (err) {
-    console.log(err);
-    return res.json("Something went wrong");
+    return res
+      .status(500)
+      .json("Something went wrong loading the user. Please try again later.");
   }
 };
