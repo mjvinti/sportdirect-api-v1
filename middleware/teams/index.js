@@ -7,18 +7,19 @@ exports.loadTeam = async (req, res, next) => {
   if (!teamId) {
     return res
       .status(400)
-      .json("You provide the following required parameters: teamId");
+      .json("You must provide the following required parameters: teamId");
   }
 
   try {
     const foundTeam = await TeamModel.findByPk(teamId);
     if (!foundTeam) {
-      return res.status(404).json(`There is no user for id: ${teamId}`);
+      return res.status(404).json(`There is no team for id: ${teamId}`);
     }
     req.team = foundTeam;
     next();
   } catch (err) {
-    console.log(err);
-    return res.json("Something went wrong");
+    return res
+      .status(500)
+      .json("Something went wrong loading the team. Please try again later.");
   }
 };

@@ -2,22 +2,22 @@ const { assert } = require("chai");
 const sinon = require("sinon");
 
 const db = require("../../lib/db");
-const { loadOrg } = require("../../middleware/orgs");
+const { loadTeam } = require("../../middleware/teams");
 
-describe("loadOrg", () => {
-  let orgStub = { findByPk: sinon.stub() };
+describe("loadTeam", () => {
+  let teamStub = { findByPk: sinon.stub() };
 
   beforeEach(() => {
-    sinon.stub(db, "loadModel").returns(orgStub);
+    sinon.stub(db, "loadModel").returns(teamStub);
   });
 
   afterEach(() => db.loadModel.restore());
 
-  it("should throw an error for no orgId", () => {
-    const req = { params: { orgId: null } },
+  it("should throw an error for no teamId", () => {
+    const req = { params: { teamId: null } },
       res = { json: sinon.stub(), status: sinon.stub().returnsThis() },
       next = sinon.stub();
-    loadOrg(req, res, next);
+    loadTeam(req, res, next);
     assert.equal(
       res.status.args[0][0],
       400,
@@ -25,22 +25,22 @@ describe("loadOrg", () => {
     );
     assert.equal(
       res.json.args[0][0],
-      "You must provide the following required parameters: orgId",
+      "You must provide the following required parameters: teamId",
       "the correct response was returned"
     );
   });
 
-  it("should handle db error when loading org", (done) => {
-    const req = { params: { orgId: 1 } },
+  it("should handle db error when loading team", (done) => {
+    const req = { params: { teamId: 1 } },
       res = { json: sinon.stub(), status: sinon.stub().returnsThis() },
       next = sinon.stub();
-    orgStub.findByPk.returns(Promise.reject(new Error("i am error")));
+    teamStub.findByPk.returns(Promise.reject(new Error("i am error")));
 
-    loadOrg(req, res, next)
+    loadTeam(req, res, next)
       .then(() => {
         assert.equal(
-          orgStub.findByPk.args[0][0],
-          req.params.orgId,
+          teamStub.findByPk.args[0][0],
+          req.params.teamId,
           "the correct args were passed"
         );
         assert.equal(
@@ -50,7 +50,7 @@ describe("loadOrg", () => {
         );
         assert.equal(
           res.json.args[0][0],
-          "Something went wrong loading the org. Please try again later.",
+          "Something went wrong loading the team. Please try again later.",
           "the correct response was returned"
         );
         done();
@@ -58,13 +58,13 @@ describe("loadOrg", () => {
       .catch((err) => done(err));
   });
 
-  it("should handle no exisiting org", (done) => {
-    const req = { params: { orgId: 1 } },
+  it("should handle no exisiting team", (done) => {
+    const req = { params: { teamId: 1 } },
       res = { json: sinon.stub(), status: sinon.stub().returnsThis() },
       next = sinon.stub();
-    orgStub.findByPk.returns(null);
+    teamStub.findByPk.returns(null);
 
-    loadOrg(req, res, next)
+    loadTeam(req, res, next)
       .then(() => {
         assert.equal(
           res.status.args[0][0],
@@ -73,7 +73,7 @@ describe("loadOrg", () => {
         );
         assert.equal(
           res.json.args[0][0],
-          `There is no org for id: ${req.params.orgId}`,
+          `There is no team for id: ${req.params.teamId}`,
           "the correct response was returned"
         );
         done();
@@ -81,18 +81,18 @@ describe("loadOrg", () => {
       .catch((err) => done(err));
   });
 
-  it("should load org on req object", (done) => {
-    let req = { params: { orgId: 1 }, org: null };
+  it("should load team on req object", (done) => {
+    let req = { params: { teamId: 1 }, team: null };
     const res = { json: sinon.stub(), status: sinon.stub().returnsThis() },
       next = sinon.stub();
-    orgStub.findByPk.returns(Promise.resolve("loaded org"));
+    teamStub.findByPk.returns(Promise.resolve("loaded team"));
 
-    loadOrg(req, res, next)
+    loadTeam(req, res, next)
       .then(() => {
         assert.equal(
-          req.org,
-          "loaded org",
-          "the org was loaded on the req object"
+          req.team,
+          "loaded team",
+          "the team was loaded on the req object"
         );
         assert.equal(next.callCount, 1, "next was called");
         done();
