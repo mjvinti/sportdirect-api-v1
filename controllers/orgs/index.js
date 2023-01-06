@@ -22,8 +22,9 @@ exports.getOrgById = (req, res, next) => {
   try {
     return res.json(org);
   } catch (err) {
-    console.log(err);
-    return res.json("Something went wrong");
+    return res.json(
+      "Something went wrong fetching the org. Please try again later."
+    );
   }
 };
 
@@ -37,8 +38,9 @@ exports.putUpdateOrgById = async (req, res, next) => {
     const updatedOrg = await org.update({ orgName, sport, status });
     return res.json(updatedOrg);
   } catch (err) {
-    console.log(err);
-    return res.json("Something went wrong");
+    return res
+      .status(500)
+      .json("Something went wrong updating the org. Please try again later.");
   }
 };
 
@@ -49,8 +51,9 @@ exports.deleteOrgById = async (req, res, next) => {
     const deletedOrg = await org.destroy();
     return res.json(deletedOrg);
   } catch (err) {
-    console.log(err);
-    return res.json("Something went wrong");
+    return res
+      .status(500)
+      .json("Something went wrong deleting the org. Please try again later.");
   }
 };
 
@@ -64,8 +67,9 @@ exports.postCreateOrgTeam = async (req, res, next) => {
     const createdTeam = await org.createTeam({ teamName, status });
     return res.json(createdTeam);
   } catch (err) {
-    console.log(err);
-    return res.json("Something went wrong");
+    return res
+      .status(500)
+      .json("Something went wrong creating the team. Please try again later.");
   }
 };
 
