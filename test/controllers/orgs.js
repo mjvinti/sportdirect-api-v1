@@ -6,6 +6,7 @@ const {
   deleteOrgById,
   getOrgById,
   postCreateOrg,
+  postCreateOrgTeam,
   putUpdateOrgById,
 } = require("../../controllers/orgs");
 
@@ -199,6 +200,66 @@ describe("orgs controllers", () => {
           assert.deepEqual(
             res.json.args[0][0],
             [],
+            "the correct response was returned"
+          );
+          done();
+        })
+        .catch((err) => done(err));
+    });
+  });
+
+  describe("postCreateOrgTeam", () => {
+    it("should handle db error when creating org team", (done) => {
+      const req = {
+          body: { teamName: "Solar Bears", status: "active" },
+          org: {
+            createTeam: sinon
+              .stub()
+              .returns(Promise.reject(new Error("i am error"))),
+          },
+        },
+        res = { json: sinon.stub(), status: sinon.stub().returnsThis() },
+        next = sinon.stub();
+
+      postCreateOrgTeam(req, res, next)
+        .then(() => {
+          assert.deepEqual(
+            req.org.createTeam.args[0][0],
+            { teamName: req.body.teamName, status: req.body.status },
+            "the correct args were passed"
+          );
+          assert.equal(
+            res.status.args[0][0],
+            500,
+            "the correct status code was returned"
+          );
+          assert.equal(
+            res.json.args[0][0],
+            "Something went wrong creating the team. Please try again later.",
+            "the correct response was returned"
+          );
+          done();
+        })
+        .catch((err) => done(err));
+    });
+
+    it("should return the created org team", (done) => {
+      const req = {
+          body: { teamName: "Solar Bears", status: "active" },
+          org: {
+            createTeam: sinon
+              .stub()
+              .returns(Promise.resolve("created org team")),
+          },
+        },
+        res = { json: sinon.stub(), status: sinon.stub().returnsThis() },
+        next = sinon.stub();
+
+      postCreateOrgTeam(req, res, next)
+        .then(() => {
+          assert.equal(
+            res.json.args[0][0],
+            "created org team",
             "the correct response was returned"
           );
           done();
