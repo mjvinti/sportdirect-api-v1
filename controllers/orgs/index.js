@@ -97,7 +97,8 @@ exports.postCreateOrgUser = async (req, res, next) => {
     });
     return res.json(createdUser);
   } catch (err) {
-    console.log(err);
-    return res.json("Something went wrong");
+    return res
+      .status(500)
+      .json("Something went wrong creating the user. Please try again later.");
   }
 };

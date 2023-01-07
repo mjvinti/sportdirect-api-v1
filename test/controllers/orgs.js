@@ -7,6 +7,7 @@ const {
   getOrgById,
   postCreateOrg,
   postCreateOrgTeam,
+  postCreateOrgUser,
   putUpdateOrgById,
 } = require("../../controllers/orgs");
 
@@ -260,6 +261,56 @@ describe("orgs controllers", () => {
           assert.equal(
             res.json.args[0][0],
             "created org team",
+            "the correct response was returned"
+          );
+          done();
+        })
+        .catch((err) => done(err));
+    });
+  });
+
+  describe("postCreateOrgUser", () => {
+    it("should handle db error when creating org user", (done) => {
+      const req = {
+          body: {
+            firstName: "John",
+            lastName: "Doe",
+            email: "test@email.com",
+            role: "user",
+            status: "pending",
+            teamId: 1,
+          },
+          org: {
+            createUser: sinon
+              .stub()
+              .returns(Promise.reject(new Error("i am error"))),
+          },
+        },
+        res = { json: sinon.stub(), status: sinon.stub().returnsThis() },
+        next = sinon.stub();
+
+      postCreateOrgUser(req, res, next)
+        .then(() => {
+          assert.deepEqual(
+            req.org.createUser.args[0][0],
+            {
+              firstName: req.body.firstName,
+              lastName: req.body.lastName,
+              email: req.body.email,
+              role: req.body.role,
+              status: req.body.status,
+              teamId: req.body.teamId,
+            },
+            "the correct args were passed"
+          );
+          assert.equal(
+            res.status.args[0][0],
+            500,
+            "the correct status code was returned"
+          );
+          assert.equal(
+            res.json.args[0][0],
+            "Something went wrong creating the user. Please try again later.",
             "the correct response was returned"
           );
           done();
