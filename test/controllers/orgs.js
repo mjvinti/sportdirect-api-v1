@@ -317,5 +317,36 @@ describe("orgs controllers", () => {
         })
         .catch((err) => done(err));
     });
+
+    it("should return created org user", (done) => {
+      const req = {
+          body: {
+            firstName: "John",
+            lastName: "Doe",
+            email: "test@email.com",
+            role: "user",
+            status: "pending",
+            teamId: 1,
+          },
+          org: {
+            createUser: sinon
+              .stub()
+              .returns(Promise.resolve("created org user")),
+          },
+        },
+        res = { json: sinon.stub(), status: sinon.stub().returnsThis() },
+        next = sinon.stub();
+
+      postCreateOrgUser(req, res, next)
+        .then(() => {
+          assert.equal(
+            res.json.args[0][0],
+            "created org user",
+            "the correct response was returned"
+          );
+          done();
+        })
+        .catch((err) => done(err));
+    });
   });
 });
