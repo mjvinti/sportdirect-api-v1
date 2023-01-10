@@ -2,22 +2,17 @@ const db = require("../../lib/db");
 
 exports.postCreateTeam = async (req, res, next) => {
   const {
-    body: { orgId = null, teamName, status = "active" },
+    body: { orgId, teamName, status = "active" },
   } = req;
   const TeamModel = db.loadModel("team");
-
-  if (!orgId) {
-    return res
-      .status(400)
-      .json("You provide the following required parameters: orgId");
-  }
 
   try {
     const createdTeam = await TeamModel.create({ orgId, teamName, status });
     return res.json(createdTeam);
   } catch (err) {
-    console.log(err);
-    return res.json("Something went wrong");
+    return res
+      .status(500)
+      .json("Something went wrong creating the team. Please try again later.");
   }
 };
 
