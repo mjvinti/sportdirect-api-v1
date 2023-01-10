@@ -4,9 +4,16 @@ const db = require("../../lib/db");
 const { sportsArr } = require("../../lib/orgs");
 
 exports.orgBodyRules = () => [
-  body("orgName").trim().isLength({ min: 3 }),
-  body("status").isIn(["active", "inactive"]),
-  body("sport").isIn(sportsArr),
+  body("orgName")
+    .trim()
+    .isLength({ min: 3 })
+    .withMessage("orgName must have a minimum of 3 characters"),
+  body("status")
+    .isIn(["active", "inactive"])
+    .withMessage("status must be either 'active` or 'inactive'"),
+  body("sport")
+    .isIn(sportsArr)
+    .withMessage(`must be a valid sport: ${sportsArr.join(", ")}`),
 ];
 
 exports.orgBodyValidate = (req, res, next) => {
