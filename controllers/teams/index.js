@@ -59,19 +59,12 @@ exports.deleteTeamById = async (req, res, next) => {
 
 exports.postCreateTeamUser = async (req, res, next) => {
   const {
-    body: {
-      firstName,
-      lastName,
-      email,
-      role = "user",
-      status = "pending",
-      orgId,
-    },
-    team,
+    body: { firstName, lastName, email, role = "user", status = "pending" },
+    team: { orgId, createUser },
   } = req;
 
   try {
-    const createdUser = await team.createUser({
+    const createdUser = await createUser({
       firstName,
       lastName,
       email,
@@ -81,7 +74,8 @@ exports.postCreateTeamUser = async (req, res, next) => {
     });
     return res.json(createdUser);
   } catch (err) {
-    console.log(err);
-    return res.json("Something went wrong");
+    return res
+      .status(500)
+      .json("Something went wrong creating the user. Please try again later.");
   }
 };

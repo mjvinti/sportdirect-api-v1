@@ -6,6 +6,7 @@ const {
   deleteTeamById,
   getTeamById,
   postCreateTeam,
+  postCreateTeamUser,
   putUpdateTeamById,
 } = require("../../controllers/teams");
 
@@ -199,6 +200,87 @@ describe("teams controllers", () => {
           assert.deepEqual(
             res.json.args[0][0],
             [],
+            "the correct response was returned"
+          );
+          done();
+        })
+        .catch((err) => done(err));
+    });
+  });
+
+  describe("postCreateTeamUser", () => {
+    it("should handle db error when creating team user", (done) => {
+      const req = {
+          body: {
+            firstName: "John",
+            lastName: "Doe",
+            email: "test@email.com",
+            role: "user",
+            status: "pending",
+          },
+          team: {
+            orgId: 1,
+            createUser: sinon
+              .stub()
+              .returns(Promise.reject(new Error("i am error"))),
+          },
+        },
+        res = { json: sinon.stub(), status: sinon.stub().returnsThis() },
+        next = sinon.stub();
+
+      postCreateTeamUser(req, res, next)
+        .then(() => {
+          assert.deepEqual(
+            req.team.createUser.args[0][0],
+            {
+              firstName: req.body.firstName,
+              lastName: req.body.lastName,
+              email: req.body.email,
+              role: req.body.role,
+              status: req.body.status,
+              orgId: req.team.orgId,
+            },
+            "the correct args were passed"
+          );
+          assert.equal(
+            res.status.args[0][0],
+            500,
+            "the correct status code was returned"
+          );
+          assert.equal(
+            res.json.args[0][0],
+            "Something went wrong creating the user. Please try again later.",
+            "the correct response was returned"
+          );
+          done();
+        })
+        .catch((err) => done(err));
+    });
+
+    it("should return the created team user", (done) => {
+      const req = {
+          body: {
+            firstName: "John",
+            lastName: "Doe",
+            email: "test@email.com",
+            role: "user",
+            status: "pending",
+          },
+          team: {
+            orgId: 1,
+            createUser: sinon
+              .stub()
+              .returns(Promise.resolve("created team user")),
+          },
+        },
+        res = { json: sinon.stub(), status: sinon.stub().returnsThis() },
+        next = sinon.stub();
+
+      postCreateTeamUser(req, res, next)
+        .then(() => {
+          assert.equal(
+            res.json.args[0][0],
+            "created team user",
             "the correct response was returned"
           );
           done();
