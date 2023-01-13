@@ -51,8 +51,9 @@ exports.deleteTeamById = async (req, res, next) => {
     const deletedTeam = await team.destroy();
     return res.json(deletedTeam);
   } catch (err) {
-    console.log(err);
-    return res.json("Something went wrong");
+    return res
+      .status(500)
+      .json("Something went wrong deleting the team. Please try again later.");
   }
 };
 

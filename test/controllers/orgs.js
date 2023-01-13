@@ -187,7 +187,7 @@ describe("orgs controllers", () => {
         .catch((err) => done(err));
     });
 
-    it("should handle db error when deleting org", (done) => {
+    it("should handle deleting org", (done) => {
       const req = {
           org: {
             destroy: sinon.stub().returns(Promise.resolve([])),

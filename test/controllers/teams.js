@@ -3,6 +3,7 @@ const sinon = require("sinon");
 
 const db = require("../../lib/db");
 const {
+  deleteTeamById,
   getTeamById,
   postCreateTeam,
   putUpdateTeamById,
@@ -127,7 +128,7 @@ describe("teams controllers", () => {
         .catch((err) => done(err));
     });
 
-    it("should return the updated org", (done) => {
+    it("should return the updated team", (done) => {
       const req = {
           body: { orgId: 1, teamName: "Solar Bears", status: "active" },
           team: {
@@ -142,6 +143,62 @@ describe("teams controllers", () => {
           assert.equal(
             res.json.args[0][0],
             "updated team",
+            "the correct response was returned"
+          );
+          done();
+        })
+        .catch((err) => done(err));
+    });
+  });
+
+  describe("deleteTeamById", () => {
+    it("should handle db error when deleting team", (done) => {
+      const req = {
+          team: {
+            destroy: sinon
+              .stub()
+              .returns(Promise.reject(new Error("i am error"))),
+          },
+        },
+        res = { json: sinon.stub(), status: sinon.stub().returnsThis() },
+        next = sinon.stub();
+
+      deleteTeamById(req, res, next)
+        .then(() => {
+          assert.deepEqual(
+            req.team.destroy.callCount,
+            1,
+            "destroy was called once"
+          );
+          assert.equal(
+            res.status.args[0][0],
+            500,
+            "the correct status code was returned"
+          );
+          assert.equal(
+            res.json.args[0][0],
+            "Something went wrong deleting the team. Please try again later.",
+            "the correct response was returned"
+          );
+          done();
+        })
+        .catch((err) => done(err));
+    });
+
+    it("should handle db error when deleting team", (done) => {
+      const req = {
+          team: {
+            destroy: sinon.stub().returns(Promise.resolve([])),
+          },
+        },
+        res = { json: sinon.stub(), status: sinon.stub().returnsThis() },
+        next = sinon.stub();
+
+      deleteTeamById(req, res, next)
+        .then(() => {
+          assert.deepEqual(
+            res.json.args[0][0],
+            [],
             "the correct response was returned"
           );
           done();
