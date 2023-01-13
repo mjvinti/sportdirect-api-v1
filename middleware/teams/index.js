@@ -1,4 +1,21 @@
+const { body } = require("express-validator");
+
 const db = require("../../lib/db");
+
+exports.teamBodyRules = () => [
+  body("teamName")
+    .trim()
+    .isLength({ min: 3 })
+    .withMessage("teamName must have a minimum of 3 characters"),
+  body("status")
+    .isIn(["active", "inactive"])
+    .withMessage("status must be either 'active` or 'inactive'"),
+  body("orgId")
+    .isNumeric()
+    .not()
+    .isEmpty()
+    .withMessage("orgId is a required field"),
+];
 
 exports.loadTeam = async (req, res, next) => {
   const {

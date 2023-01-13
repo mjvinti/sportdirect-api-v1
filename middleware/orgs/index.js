@@ -1,4 +1,4 @@
-const { body, validationResult } = require("express-validator");
+const { body } = require("express-validator");
 
 const db = require("../../lib/db");
 const { sportsArr } = require("../../lib/orgs");
@@ -15,15 +15,6 @@ exports.orgBodyRules = () => [
     .isIn(sportsArr)
     .withMessage(`must be a valid sport: ${sportsArr.join(", ")}`),
 ];
-
-exports.orgBodyValidate = (req, res, next) => {
-  const errors = validationResult(req);
-  if (errors.isEmpty()) {
-    return next();
-  }
-
-  return res.status(400).json({ errors: errors.array() });
-};
 
 exports.loadOrg = async (req, res, next) => {
   const {

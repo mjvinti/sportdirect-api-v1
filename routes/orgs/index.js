@@ -1,20 +1,17 @@
 const router = require("express").Router();
 
 const orgsController = require("../../controllers/orgs");
-const {
-  loadOrg,
-  orgBodyRules,
-  orgBodyValidate,
-} = require("../../middleware/orgs");
+const { loadOrg, orgBodyRules } = require("../../middleware/orgs");
+const { bodyValidate } = require("../../middleware/validation");
 
-router.post("/", orgBodyRules(), orgBodyValidate, orgsController.postCreateOrg);
+router.post("/", orgBodyRules(), bodyValidate, orgsController.postCreateOrg);
 
 router.get("/:orgId", loadOrg, orgsController.getOrgById);
 
 router.put(
   "/:orgId",
   orgBodyRules(),
-  orgBodyValidate,
+  bodyValidate,
   loadOrg,
   orgsController.putUpdateOrgById
 );
