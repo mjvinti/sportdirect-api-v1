@@ -22,9 +22,9 @@ exports.getTeamById = (req, res, next) => {
   try {
     return res.json(team);
   } catch (err) {
-    return res.json(
-      "Something went wrong fetching the team. Please try again later"
-    );
+    return res
+      .status(500)
+      .json("Something went wrong fetching the team. Please try again later.");
   }
 };
 
@@ -38,8 +38,9 @@ exports.putUpdateTeamById = async (req, res, next) => {
     const updatedTeam = await team.update({ orgId, teamName, status });
     return res.json(updatedTeam);
   } catch (err) {
-    console.log(err);
-    return res.json("Something went wrong");
+    return res
+      .status(500)
+      .json("Something went wrong updating the team. Please try again later.");
   }
 };
 
