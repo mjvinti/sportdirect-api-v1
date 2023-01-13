@@ -2,7 +2,7 @@ const { assert } = require("chai");
 const sinon = require("sinon");
 
 const db = require("../../lib/db");
-const { postCreateTeam } = require("../../controllers/teams");
+const { postCreateTeam, getTeamById } = require("../../controllers/teams");
 
 describe("teams controllers", () => {
   describe("postCreateTeam", () => {
@@ -66,6 +66,21 @@ describe("teams controllers", () => {
           done();
         })
         .catch((err) => done(err));
+    });
+  });
+
+  describe("getTeamById", () => {
+    it("should return loaded team", () => {
+      const req = { team: "loaded team" },
+        res = { json: sinon.stub(), status: sinon.stub().returnsThis() },
+        next = sinon.stub();
+
+      getTeamById(req, res, next);
+      assert.equal(
+        res.json.args[0][0],
+        "loaded team",
+        "the correct response was returned"
+      );
     });
   });
 });

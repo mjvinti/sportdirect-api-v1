@@ -22,8 +22,9 @@ exports.getTeamById = (req, res, next) => {
   try {
     return res.json(team);
   } catch (err) {
-    console.log(err);
-    return res.json("Something went wrong");
+    return res.json(
+      "Something went wrong fetching the team. Please try again later"
+    );
   }
 };
 
