@@ -25,6 +25,13 @@ module.exports = (sequelize) =>
       allowNull: false,
       defaultValue: "user",
     },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        min: 8,
+      },
+    },
     status: {
       type: DataTypes.ENUM("pending", "active", "inactive"),
       allowNull: false,

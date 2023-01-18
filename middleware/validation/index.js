@@ -6,5 +6,7 @@ exports.bodyValidate = (req, res, next) => {
     return next();
   }
 
-  return res.status(400).json({ errors: errors.array() });
+  return res
+    .status(422)
+    .json({ message: "Validation failed.", errors: errors.array() });
 };
