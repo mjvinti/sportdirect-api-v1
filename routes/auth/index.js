@@ -8,4 +8,6 @@ const { bodyValidate } = require("../../middleware/validation");
 
 router.post("/signup", userBodyRules(), bodyValidate, authController.signup);
 
+router.post("/login", authController.login);
+
 module.exports = router;

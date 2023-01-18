@@ -21,3 +21,29 @@ exports.signup = async (req, res, next) => {
       );
   }
 };
+
+exports.login = async (req, res, next) => {
+  const {
+    body: { email, password },
+  } = req;
+
+  try {
+    const foundUser = await db.loadModel("user").findOne({ where: { email } });
+    if (!foundUser) {
+      return res.status(401).json(`No user found with email: ${email}`);
+    }
+
+    const isPasswordsEqual = await bcrypt.compare(password, foundUser.password);
+    if (!isPasswordsEqual) {
+      return res
+        .status(401)
+        .json("The password entered is incorrect. Please try again.");
+    }
+  } catch (err) {
+    return res
+      .status(500)
+      .json(
+        "Something went wrong logging in the user. Please try again later."
+      );
+  }
+};
