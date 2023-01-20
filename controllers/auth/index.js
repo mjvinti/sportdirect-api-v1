@@ -31,9 +31,7 @@ exports.login = async (req, res, next) => {
   } = req;
 
   try {
-    const user = await db
-      .loadModel("user")
-      .findOne({ where: { email }, attributes: { exclude: ["password"] } });
+    const user = await db.loadModel("user").findOne({ where: { email } });
     if (!user) {
       return res.status(401).json(`No user found with email: ${email}`);
     }
