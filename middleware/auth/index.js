@@ -16,7 +16,7 @@ exports.isAuthenticated = (req, res, next) => {
       return res.status(401).json("User is not authenticated.");
     }
 
-    req.userId = decodedToken.id;
+    req.authUser = decodedToken.user;
     next();
   } catch (err) {
     return res

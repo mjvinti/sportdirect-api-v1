@@ -43,10 +43,10 @@ exports.login = async (req, res, next) => {
         .json("The password entered is incorrect. Please try again.");
     }
 
-    const token = jwt.sign({ email: user.email, id: user.id }, JWT_SECRET, {
+    const token = jwt.sign({ user }, JWT_SECRET, {
       expiresIn: "1h",
     });
-    return res.status(200).json({ token, id: user.id });
+    return res.status(200).json({ token, user });
   } catch (err) {
     return res
       .status(500)
