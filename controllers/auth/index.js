@@ -1,6 +1,9 @@
+require("dotenv").config();
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const db = require("../../lib/db");
+const { JWT_SECRET } = process.env;
 
 exports.signup = async (req, res, next) => {
   const {
@@ -28,17 +31,24 @@ exports.login = async (req, res, next) => {
   } = req;
 
   try {
-    const foundUser = await db.loadModel("user").findOne({ where: { email } });
-    if (!foundUser) {
+    const user = await db
+      .loadModel("user")
+      .findOne({ where: { email }, attributes: { exclude: ["password"] } });
+    if (!user) {
       return res.status(401).json(`No user found with email: ${email}`);
     }
 
-    const isPasswordsEqual = await bcrypt.compare(password, foundUser.password);
+    const isPasswordsEqual = await bcrypt.compare(password, user.password);
     if (!isPasswordsEqual) {
       return res
         .status(401)
         .json("The password entered is incorrect. Please try again.");
     }
+
+    const token = jwt.sign({ email: user.email, id: user.id }, JWT_SECRET, {
+      expiresIn: "1h",
+    });
+    return res.status(200).json({ token, id: user.id });
   } catch (err) {
     return res
       .status(500)
