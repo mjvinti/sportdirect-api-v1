@@ -1,4 +1,5 @@
 require("dotenv").config();
+const { body } = require("express-validator");
 const jwt = require("jsonwebtoken");
 
 const { JWT_SECRET } = process.env;
