@@ -24,3 +24,11 @@ exports.isAuthenticated = (req, res, next) => {
       .json("There was an error authenticating the user. Please try again.");
   }
 };
+
+exports.loginBodyRules = () => [
+  body("email").normalizeEmail().isEmail().withMessage("email must be valid"),
+  body("password")
+    .trim()
+    .isLength({ min: 8 })
+    .withMessage("password must have a minimum of 8 characters"),
+];
