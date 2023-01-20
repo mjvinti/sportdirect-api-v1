@@ -3,7 +3,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const db = require("../../lib/db");
-const { JWT_SECRET } = process.env;
 
 exports.signup = async (req, res, next) => {
   const {
@@ -43,6 +42,7 @@ exports.login = async (req, res, next) => {
         .json("The password entered is incorrect. Please try again.");
     }
 
+    const { JWT_SECRET } = process.env;
     const token = jwt.sign({ user }, JWT_SECRET, {
       expiresIn: "1h",
     });
