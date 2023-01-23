@@ -22,7 +22,7 @@ router.delete("/:orgId", loadOrg, deleteOrgById);
 
 router.post(
   "/:orgId/league",
-  leagueBodyRules,
+  leagueBodyRules(),
   bodyValidate,
   loadOrg,
   postCreateOrgLeague
