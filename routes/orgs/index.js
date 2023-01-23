@@ -1,25 +1,31 @@
 const router = require("express").Router();
 
-const orgsController = require("../../controllers/orgs");
+const {
+  getOrgById,
+  postCreateOrg,
+  postCreateOrgLeague,
+  putUpdateOrgById,
+  deleteOrgById,
+} = require("../../controllers/orgs");
+
+const { leagueBodyRules } = require("../../middleware/leagues");
 const { loadOrg, orgBodyRules } = require("../../middleware/orgs");
 const { bodyValidate } = require("../../middleware/validation");
 
-router.post("/", orgBodyRules(), bodyValidate, orgsController.postCreateOrg);
+router.post("/", orgBodyRules(), bodyValidate, postCreateOrg);
 
-router.get("/:orgId", loadOrg, orgsController.getOrgById);
+router.get("/:orgId", loadOrg, getOrgById);
 
-router.put(
-  "/:orgId",
-  orgBodyRules(),
+router.put("/:orgId", orgBodyRules(), bodyValidate, loadOrg, putUpdateOrgById);
+
+router.delete("/:orgId", loadOrg, deleteOrgById);
+
+router.post(
+  "/:orgId/league",
+  leagueBodyRules,
   bodyValidate,
   loadOrg,
-  orgsController.putUpdateOrgById
+  postCreateOrgLeague
 );
-
-router.delete("/:orgId", loadOrg, orgsController.deleteOrgById);
-
-router.post("/:orgId/team", loadOrg, orgsController.postCreateOrgTeam);
-
-router.post("/:orgId/user", loadOrg, orgsController.postCreateOrgUser);
 
 module.exports = router;

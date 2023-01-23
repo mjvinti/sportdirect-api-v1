@@ -2,7 +2,7 @@ const db = require("../../lib/db");
 
 exports.postCreateOrg = async (req, res, next) => {
   const {
-    body: { orgName, sport, status = "active" },
+    body: { orgName, sport, status },
   } = req;
   const OrgModel = db.loadModel("org");
 
@@ -54,5 +54,23 @@ exports.deleteOrgById = async (req, res, next) => {
     return res
       .status(500)
       .json("Something went wrong deleting the org. Please try again later.");
+  }
+};
+
+exports.postCreateOrgLeague = async (req, res, next) => {
+  const {
+    body: { leagueName, status },
+    org,
+  } = req;
+
+  try {
+    const createdLeague = await org.createLeague({ leagueName, status });
+    return res.status(201).json(createdLeague);
+  } catch (err) {
+    return res
+      .status(500)
+      .json(
+        "Something went wrong creating the league. Please try again later."
+      );
   }
 };

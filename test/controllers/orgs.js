@@ -6,6 +6,7 @@ const {
   deleteOrgById,
   getOrgById,
   postCreateOrg,
+  postCreateOrgLeague,
   putUpdateOrgById,
 } = require("../../controllers/orgs");
 
@@ -199,6 +200,71 @@ describe("orgs controllers", () => {
           assert.deepEqual(
             res.json.args[0][0],
             [],
+            "the correct response was returned"
+          );
+          done();
+        })
+        .catch((err) => done(err));
+    });
+  });
+
+  describe("postCreateOrgLeague", () => {
+    it("should handle db error when creating league", (done) => {
+      const req = {
+          body: { leagueName: "test league", status: "active" },
+          org: {
+            createLeague: sinon
+              .stub()
+              .returns(Promise.reject(new Error("i am error"))),
+          },
+        },
+        res = { json: sinon.stub(), status: sinon.stub().returnsThis() },
+        next = sinon.stub();
+
+      postCreateOrgLeague(req, res, next)
+        .then(() => {
+          assert.deepEqual(
+            req.org.createLeague.args[0][0],
+            { leagueName: req.body.leagueName, status: req.body.status },
+            "the correct args passed"
+          );
+          assert.equal(
+            res.status.args[0][0],
+            500,
+            "the correct status code was returned"
+          );
+          assert.equal(
+            res.json.args[0][0],
+            "Something went wrong creating the league. Please try again later.",
+            "the correct response was returned"
+          );
+          done();
+        })
+        .catch((err) => done(err));
+    });
+
+    it("should handle creating league", (done) => {
+      const req = {
+          body: { leagueName: "test league", status: "active" },
+          org: {
+            createLeague: sinon
+              .stub()
+              .returns(Promise.resolve("created league")),
+          },
+        },
+        res = { json: sinon.stub(), status: sinon.stub().returnsThis() },
+        next = sinon.stub();
+
+      postCreateOrgLeague(req, res, next)
+        .then(() => {
+          assert.equal(
+            res.status.args[0][0],
+            201,
+            "the correct status code was returned"
+          );
+          assert.deepEqual(
+            res.json.args[0][0],
+            "created league",
             "the correct response was returned"
           );
           done();
