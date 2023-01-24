@@ -3,6 +3,7 @@ const express = require("express");
 const helmet = require("helmet");
 
 const authRoutes = require("./routes/auth");
+const leaguesRoutes = require("./routes/leagues");
 const orgsRoutes = require("./routes/orgs");
 const usersRoutes = require("./routes/users");
 const teamsRoutes = require("./routes/teams");
@@ -16,6 +17,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use("/api/auth", authRoutes);
+app.use("/api/leagues", leaguesRoutes);
 app.use("/api/orgs", orgsRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/teams", teamsRoutes);
