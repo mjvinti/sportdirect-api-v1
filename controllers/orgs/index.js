@@ -4,10 +4,11 @@ exports.postCreateOrg = async (req, res, next) => {
   const {
     body: { orgName, sport, status },
   } = req;
-  const OrgModel = db.loadModel("org");
 
   try {
-    const createdOrg = await OrgModel.create({ orgName, sport, status });
+    const createdOrg = await db
+      .loadModel("org")
+      .create({ orgName, sport, status });
     return res.json(createdOrg);
   } catch (err) {
     return res
