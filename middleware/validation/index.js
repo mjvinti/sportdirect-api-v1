@@ -10,3 +10,17 @@ exports.bodyValidate = (req, res, next) => {
     .status(422)
     .json({ message: "Validation failed.", errors: errors.array() });
 };
+
+exports.isAdmin = (req, res, next) => {
+  const {
+    user: { role },
+  } = req;
+
+  if (!role === "admin") {
+    return res
+      .status(401)
+      .json("User does not have permissions to perform this action.");
+  }
+
+  next();
+};

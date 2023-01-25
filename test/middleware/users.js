@@ -15,7 +15,7 @@ describe("users middleware", () => {
     afterEach(() => db.loadModel.restore());
 
     it("should throw an error for no userId", () => {
-      const req = { params: { userId: null } },
+      const req = { auth: { id: null } },
         res = { json: sinon.stub(), status: sinon.stub().returnsThis() },
         next = sinon.stub();
       loadUser(req, res, next);
@@ -26,13 +26,13 @@ describe("users middleware", () => {
       );
       assert.equal(
         res.json.args[0][0],
-        "You must provide the following required parameters: userId",
+        "You must provide the following required parameters: id",
         "the correct response was returned"
       );
     });
 
     it("should handle db error when loading user", (done) => {
-      const req = { params: { userId: 1 } },
+      const req = { auth: { id: 1 } },
         res = { json: sinon.stub(), status: sinon.stub().returnsThis() },
         next = sinon.stub();
       userStub.findByPk.returns(Promise.reject(new Error("i am error")));
@@ -41,7 +41,7 @@ describe("users middleware", () => {
         .then(() => {
           assert.equal(
             userStub.findByPk.args[0][0],
-            req.params.userId,
+            req.auth.id,
             "the correct args were passed"
           );
           assert.equal(
@@ -60,7 +60,7 @@ describe("users middleware", () => {
     });
 
     it("should handle no exisiting user", (done) => {
-      const req = { params: { userId: 1 } },
+      const req = { auth: { id: 1 } },
         res = { json: sinon.stub(), status: sinon.stub().returnsThis() },
         next = sinon.stub();
       userStub.findByPk.returns(null);
@@ -74,7 +74,7 @@ describe("users middleware", () => {
           );
           assert.equal(
             res.json.args[0][0],
-            `There is no user for id: ${req.params.userId}`,
+            `There is no user for id: ${req.auth.id}`,
             "the correct response was returned"
           );
           done();
@@ -83,7 +83,7 @@ describe("users middleware", () => {
     });
 
     it("should load user on req object", (done) => {
-      let req = { params: { userId: 1 }, user: null };
+      let req = { auth: { id: 1 }, user: null };
       const res = { json: sinon.stub(), status: sinon.stub().returnsThis() },
         next = sinon.stub();
       userStub.findByPk.returns(Promise.resolve("loaded user"));

@@ -12,26 +12,21 @@ const {
 
 describe("orgs controllers", () => {
   describe("postCreateOrg", () => {
-    let orgStub = { create: sinon.stub() };
-
-    beforeEach(() => {
-      sinon.stub(db, "loadModel").returns(orgStub);
-    });
-
-    afterEach(() => db.loadModel.restore());
+    let userStub = { createOrg: sinon.stub() };
 
     it("should handle db error when creating org", (done) => {
       const req = {
+          user: userStub,
           body: { orgName: "SportDirect", sport: "hockey", status: "active" },
         },
         res = { json: sinon.stub(), status: sinon.stub().returnsThis() },
         next = sinon.stub();
-      orgStub.create.returns(Promise.reject(new Error("i am error")));
+      userStub.createOrg.returns(Promise.reject(new Error("i am error")));
 
       postCreateOrg(req, res, next)
         .then(() => {
           assert.deepEqual(
-            orgStub.create.args[0][0],
+            userStub.createOrg.args[0][0],
             {
               orgName: req.body.orgName,
               sport: req.body.sport,
@@ -56,14 +51,20 @@ describe("orgs controllers", () => {
 
     it("should return created org", (done) => {
       const req = {
+          user: userStub,
           body: { orgName: "SportDirect", sport: "hockey", status: "active" },
         },
         res = { json: sinon.stub(), status: sinon.stub().returnsThis() },
         next = sinon.stub();
-      orgStub.create.returns(Promise.resolve("created org"));
+      userStub.createOrg.returns(Promise.resolve("created org"));
 
       postCreateOrg(req, res, next)
         .then(() => {
+          assert.equal(
+            res.status.args[0][0],
+            201,
+            "the correct status code was returned"
+          );
           assert.equal(
             res.json.args[0][0],
             "created org",

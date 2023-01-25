@@ -227,7 +227,7 @@ describe("auth controllers", () => {
           );
           assert.deepEqual(
             res.json.args[0][0],
-            { token: "token", user: { password: "hashed password" } },
+            { token: "token", auth: { password: "hashed password" } },
             "the correct response was returned"
           );
           done();

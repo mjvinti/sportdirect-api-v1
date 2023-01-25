@@ -12,10 +12,9 @@ exports.postCreateUser = async (req, res, next) => {
       teamId = null,
     },
   } = req;
-  const UserModel = db.loadModel("user");
 
   try {
-    const createdUser = await UserModel.create({
+    const createdUser = await db.loadModel("user").create({
       firstName,
       lastName,
       email,
@@ -26,7 +25,6 @@ exports.postCreateUser = async (req, res, next) => {
     });
     return res.json(createdUser);
   } catch (err) {
-    console.log(err);
     return res.json("Something went wrong");
   }
 };
@@ -37,7 +35,6 @@ exports.getUserById = (req, res, next) => {
   try {
     return res.json(user);
   } catch (err) {
-    console.log(err);
     return res.json("Something went wrong");
   }
 };
@@ -60,7 +57,6 @@ exports.putUpdateUserById = async (req, res, next) => {
     });
     return res.json(updatedUser);
   } catch (err) {
-    console.log(err);
     return res.json("Something went wrong");
   }
 };
@@ -72,7 +68,6 @@ exports.deleteUserById = async (req, res, next) => {
     const deletedUser = await user.destroy();
     return res.json(deletedUser);
   } catch (err) {
-    console.log(err);
     return res.json("Something went wrong");
   }
 };

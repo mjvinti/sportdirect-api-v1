@@ -2,14 +2,13 @@ const db = require("../../lib/db");
 
 exports.postCreateOrg = async (req, res, next) => {
   const {
+    user,
     body: { orgName, sport, status },
   } = req;
 
   try {
-    const createdOrg = await db
-      .loadModel("org")
-      .create({ orgName, sport, status });
-    return res.json(createdOrg);
+    const createdOrg = await user.createOrg({ orgName, sport, status });
+    return res.status(201).json(createdOrg);
   } catch (err) {
     return res
       .status(500)

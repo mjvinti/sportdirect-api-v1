@@ -5,19 +5,19 @@ const { rolesArr, statusesArr } = require("../../lib/users");
 
 exports.loadUser = async (req, res, next) => {
   const {
-    params: { userId = null },
+    auth: { id = null },
   } = req;
 
-  if (!userId) {
+  if (!id) {
     return res
       .status(400)
-      .json("You must provide the following required parameters: userId");
+      .json("You must provide the following required parameters: id");
   }
 
   try {
-    const foundUser = await db.loadModel("user").findByPk(userId);
+    const foundUser = await db.loadModel("user").findByPk(id);
     if (!foundUser) {
-      return res.status(404).json(`There is no user for id: ${userId}`);
+      return res.status(404).json(`There is no user for id: ${id}`);
     }
     req.user = foundUser;
     next();
